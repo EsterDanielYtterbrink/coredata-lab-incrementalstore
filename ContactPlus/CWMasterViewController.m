@@ -40,13 +40,12 @@ static NSString* personReuseIdentifier = @"personReuseIdentifier";
 
 - (void)insertNewObject:(id)sender
 {
-    NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-    NSEntityDescription *entity = [[self.fetchedResultsController fetchRequest] entity];
-    CWPerson *person = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
+    //Get the context of your fetchedResultsController
+    //Create a person object
+    
     UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     CWDetailViewController* detailViewController = [storyboard instantiateViewControllerWithIdentifier:@"Detail"];
-    detailViewController.person = person;
-    detailViewController.context = self.managedObjectContext;
+    //Give the detailviewcontroller a person and a context
     [self.navigationController pushViewController:detailViewController animated:YES];
    /*
     
@@ -73,13 +72,10 @@ static NSString* personReuseIdentifier = @"personReuseIdentifier";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    return [sectionInfo numberOfObjects];
-}
--(void)tableView:tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
-{
+// NSFetchedResultsSectionInfo from fetchedResultscontroller is your friend
     
 }
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:personReuseIdentifier forIndexPath:indexPath];
@@ -119,10 +115,9 @@ static NSString* personReuseIdentifier = @"personReuseIdentifier";
 {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        CWPerson *person = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+//Get the correct person object
         CWDetailViewController* detailViewController = [segue destinationViewController];
-        detailViewController.person = person;
-        detailViewController.context = self.managedObjectContext;
+        //Give the detailcontroller a context
     }
 }
 
@@ -130,38 +125,10 @@ static NSString* personReuseIdentifier = @"personReuseIdentifier";
 
 - (NSFetchedResultsController *)fetchedResultsController
 {
-    if (_fetchedResultsController != nil) {
-        return _fetchedResultsController;
+    if (_fetchedResultsController == nil) {
+        //Create a fetchedresultscontroller
+        //Do not forget the sortdescriptor
     }
-    
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Person" inManagedObjectContext:self.managedObjectContext];
-    [fetchRequest setEntity:entity];
-    
-    // Set the batch size to a suitable number.
-    [fetchRequest setFetchBatchSize:20];
-    
-    // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"firstName" ascending:NO];
-    NSArray *sortDescriptors = @[sortDescriptor];
-    
-    [fetchRequest setSortDescriptors:sortDescriptors];
-    
-    // Edit the section name key path and cache name if appropriate.
-    // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Master"];
-    aFetchedResultsController.delegate = self;
-    self.fetchedResultsController = aFetchedResultsController;
-    
-	NSError *error = nil;
-	if (![self.fetchedResultsController performFetch:&error]) {
-	     // Replace this implementation with code to handle the error appropriately.
-	     // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-	    abort();
-	}
-    
     return _fetchedResultsController;
 }    
 
@@ -227,7 +194,7 @@ static NSString* personReuseIdentifier = @"personReuseIdentifier";
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    CWPerson *person = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    CWPerson *person = // Get the person object;
     cell.textLabel.text = person.firstName;
     cell.detailTextLabel.text = person.lastName;
 }

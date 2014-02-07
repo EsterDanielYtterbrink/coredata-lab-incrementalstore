@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CWPerson.h"
+//#import "CWPerson.h"
 @interface CWDetailViewController : UITableViewController
 
-@property (strong, nonatomic) CWPerson* person;
+//@property (strong, nonatomic) CWPerson* person;
 @property(strong, nonatomic) NSManagedObjectContext* context;
 @end

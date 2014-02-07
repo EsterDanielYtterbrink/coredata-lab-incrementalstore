@@ -36,13 +36,13 @@
 {
     if (indexPath.section == 1 && indexPath.row == [self.person.numbers count]) {
       
-        CWPhoneNumber* phoneNumber = [NSEntityDescription insertNewObjectForEntityForName:@"PhoneNumber" inManagedObjectContext:self.context];
+        //Create a phone object
         [self.person insertObject:phoneNumber inNumbersAtIndex:indexPath.row];
         [self.tableView beginUpdates];
         [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.tableView endUpdates];
     }else if (indexPath.section == 2 && indexPath.row == [self.person.emails count]) {
-        CWEmail* email = (CWEmail*)[NSEntityDescription insertNewObjectForEntityForName:@"Email" inManagedObjectContext:self.context];
+        //Create an Email object
         [self.person insertObject:email inEmailsAtIndex:indexPath.row];
         [self.tableView beginUpdates];
         [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -53,10 +53,7 @@
 -(void)save;
 {
     NSError* error = nil;
-    if (![self.context save:&error]) {
-        //Do something good.
-        NSLog(@"Error: %@", error);
-    }
+   //Save context
 }
 
 -(NSInteger)tableView:tableView numberOfRowsInSection:(NSInteger)section;
