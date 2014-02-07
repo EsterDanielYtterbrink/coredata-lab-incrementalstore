@@ -7,6 +7,7 @@
 //
 
 #import "CWAddressBookIncrementalStore.h"
+#import "CWPerson.h"
 @import AddressBook;
 
 @interface CWAddressBookIncrementalStore()
@@ -31,7 +32,6 @@
 
 -(id)executeRequest:(NSPersistentStoreRequest *)request withContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error;
 {
-    //TODO Find the right parameters
     CFErrorRef* errorRef = NULL;
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, errorRef);
     if ([request requestType] == NSFetchRequestType) {
@@ -44,10 +44,15 @@
             for (int i = 0; i< [allPeople count]; i++){
                 ABRecordRef person = (__bridge ABRecordRef)([allPeople objectAtIndex:i]);
                 ABRecordID recordId = ABRecordGetRecordID(person);
+                NSString* lastName  = (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty));
+                NSLog(@"lastName %@", lastName);
                 NSManagedObjectID* objectID = [self newObjectIDForEntity:entity referenceObject:@(recordId)];
-                [fetchedObjects addObject:[context objectWithID:objectID]];
+                CWPerson* p = (CWPerson*)[context objectWithID:objectID];
+ //               p.lastName = lastName;
+                [fetchedObjects addObject:p];
             }
             [fetchedObjects sortUsingDescriptors:fetchRequest.sortDescriptors];
+            return fetchedObjects;
         }
         /* if([entity.managedObjectClassName isEqualToString:@"CWPersonProperty"])
         {
@@ -82,20 +87,38 @@
 - (NSIncrementalStoreNode *)newValuesForObjectWithID:(NSManagedObjectID*)objectID withContext:(NSManagedObjectContext*)context error:
     (NSError**)error;
 {
-   /* NSIncrementalStoreNode* node;
-    if ([objectID.entity.name isEqualToString:@"CW"]) {
-        NSString* name = [self referenceObjectForObjectID:objectID];
-        NSMutableDictionary* values = [NSMutableDictionary dictionaryWithDictionary:self.objects[name]];
-        [values setObject:[self newObjectIDForEntity:[NSEntityDescription entityForName:@"PRSCategory" inManagedObjectContext:context] referenceObject:@"Aircrafts"] forKey:@"category"];
+    NSIncrementalStoreNode* node;
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
+    if ([objectID.entity.name isEqualToString:@"Person"]) {
+        NSNumber* idAsNumber = [self referenceObjectForObjectID:objectID];
+        ABRecordID recordID = idAsNumber.integerValue;
+        ABRecordRef person = ABAddressBookGetPersonWithRecordID(addressBook, recordID);
+       NSString* firstName = (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty));
+       NSString* lastName  = (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty));
+        NSMutableDictionary* values = [NSMutableDictionary dictionary];
+        if (firstName) {
+            [values setObject:firstName forKey:@"firstName"];
+        }
+        if (lastName) {
+            [values setObject:lastName forKey:@"lastName"];
+        }
+        if (!(firstName || lastName)) {
+            NSLog(@"names are both nil");
+
+        }
+
+        //NSLog(@"newValuesForObjectWithEntityName %@, firstName %@, lastName %@", objectID.entity.name, firstName, lastName);
+
+       //TODO! Add emails etc. [values setObject:[self newObjectIDForEntity:[NSEntityDescription entityForName:@"PRSCategory" inManagedObjectContext:context] referenceObject:@"Aircrafts"] forKey:@"category"];
         //Should be incremented when record is saved!!
         uint64_t version = 1;
      node = [[NSIncrementalStoreNode alloc] initWithObjectID:objectID withValues:values version:version];
         return node;
-    }else if ([objectID.entity.name isEqualToString:@"PRSCategory"]){
+    }/*else if ([objectID.entity.name isEqualToString:@"PRSCategory"]){
        node  =[[ NSIncrementalStoreNode alloc]initWithObjectID:objectID withValues:@{@"name":@"Aircrafts",@"identifier":@"543",@"lowestPrice":@42}     version:1];
     }
-    return node;*/
-    return [[ NSIncrementalStoreNode alloc]initWithObjectID:objectID withValues:@{@"lastName":@"Bar",@"firstName":@"Foo"}     version:1];;
+      */
+    return node;
 }
 
 -(NSArray *)obtainPermanentIDsForObjects:(NSArray *)array error:(NSError *__autoreleasing *)error;
@@ -114,6 +137,7 @@
     }
     return objectIDs;
 }
+
 // Returns the relationship for the given relationship on the object with ID objectID. If the relationship
 // is a to-one it should return an NSManagedObjectID corresponding to the destination or NSNull if the relationship value is nil.
 // If the relationship is a to-many, should return an NSSet or NSArray containing the NSManagedObjectIDs of the related objects.

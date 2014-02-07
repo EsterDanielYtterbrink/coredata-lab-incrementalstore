@@ -10,6 +10,8 @@
 
 #import "CWMasterViewController.h"
 #import "CWAddressBookIncrementalStore.h"
+@import AddressBook;
+
 @implementation CWAppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -20,7 +22,17 @@
 {
     // Override point for customization after application launch.
     [NSPersistentStoreCoordinator registerStoreClass:[CWAddressBookIncrementalStore class] forStoreType:@"CWAddressBookIncrementalStore"];
-
+    ABAddressBookRef addressBook = ABAddressBookCreate();
+    ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error)
+                                             {
+                                                 if (granted)
+                                                 {
+                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                         
+                                                         
+                                                     });
+                                                 }
+                                             });
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
     CWMasterViewController *controller = (CWMasterViewController *)navigationController.topViewController;
     controller.managedObjectContext = self.managedObjectContext;

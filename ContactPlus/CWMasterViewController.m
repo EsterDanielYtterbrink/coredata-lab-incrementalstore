@@ -74,7 +74,9 @@ static NSString* personReuseIdentifier = @"personReuseIdentifier";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    return [sectionInfo numberOfObjects];
+    //TODO! Why won't my section info work?
+    return [self.fetchedResultsController.fetchedObjects count];
+    //return [sectionInfo numberOfObjects];
 }
 -(void)tableView:tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
@@ -227,7 +229,9 @@ static NSString* personReuseIdentifier = @"personReuseIdentifier";
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    CWPerson *person = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    CWPerson *person =self.fetchedResultsController.fetchedObjects[indexPath.row];
+
+    //[self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = person.firstName;
     cell.detailTextLabel.text = person.lastName;
 }
