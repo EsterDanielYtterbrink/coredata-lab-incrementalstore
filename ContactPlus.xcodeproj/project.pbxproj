@@ -25,6 +25,15 @@
 		C70F6F0F18A239A700A004E7 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C70F6EEA18A239A600A004E7 /* CoreData.framework */; };
 		C70F6F1718A239A700A004E7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C70F6F1518A239A700A004E7 /* InfoPlist.strings */; };
 		C70F6F1918A239A700A004E7 /* ContactPlusTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C70F6F1818A239A700A004E7 /* ContactPlusTests.m */; };
+		C70F6F3518A2866C00A004E7 /* CWEditPropertyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C70F6F3418A2866C00A004E7 /* CWEditPropertyCell.m */; };
+		C70F6F4118A28C7C00A004E7 /* CWPredefinedTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C70F6F4018A28C7C00A004E7 /* CWPredefinedTitleCell.m */; };
+		C70F6F4418A28E8D00A004E7 /* CWPerson+TableViewHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = C70F6F4318A28E8D00A004E7 /* CWPerson+TableViewHelpers.m */; };
+		C70F6F4718A2930A00A004E7 /* CWPhoneNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = C70F6F4618A2930A00A004E7 /* CWPhoneNumber.m */; };
+		C70F6F4A18A2930B00A004E7 /* CWEmail.m in Sources */ = {isa = PBXBuildFile; fileRef = C70F6F4918A2930B00A004E7 /* CWEmail.m */; };
+		C70F6F5018A2930B00A004E7 /* CWPersonProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = C70F6F4F18A2930B00A004E7 /* CWPersonProperty.m */; };
+		C70F6F5318A2942200A004E7 /* CWPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = C70F6F5218A2942200A004E7 /* CWPerson.m */; };
+		C7C30E7518A3B1310041CF30 /* CWAddressBookIncrementalStore.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C30E7418A3B1310041CF30 /* CWAddressBookIncrementalStore.m */; };
+		C7C30E7818A3B1450041CF30 /* PRSCoreDataHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C30E7718A3B1450041CF30 /* PRSCoreDataHelper.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +70,24 @@
 		C70F6F1418A239A700A004E7 /* ContactPlusTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ContactPlusTests-Info.plist"; sourceTree = "<group>"; };
 		C70F6F1618A239A700A004E7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C70F6F1818A239A700A004E7 /* ContactPlusTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactPlusTests.m; sourceTree = "<group>"; };
+		C70F6F3318A2866C00A004E7 /* CWEditPropertyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWEditPropertyCell.h; sourceTree = "<group>"; };
+		C70F6F3418A2866C00A004E7 /* CWEditPropertyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWEditPropertyCell.m; sourceTree = "<group>"; };
+		C70F6F3F18A28C7C00A004E7 /* CWPredefinedTitleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWPredefinedTitleCell.h; sourceTree = "<group>"; };
+		C70F6F4018A28C7C00A004E7 /* CWPredefinedTitleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWPredefinedTitleCell.m; sourceTree = "<group>"; };
+		C70F6F4218A28E8D00A004E7 /* CWPerson+TableViewHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CWPerson+TableViewHelpers.h"; sourceTree = "<group>"; };
+		C70F6F4318A28E8D00A004E7 /* CWPerson+TableViewHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CWPerson+TableViewHelpers.m"; sourceTree = "<group>"; };
+		C70F6F4518A2930A00A004E7 /* CWPhoneNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWPhoneNumber.h; sourceTree = "<group>"; };
+		C70F6F4618A2930A00A004E7 /* CWPhoneNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWPhoneNumber.m; sourceTree = "<group>"; };
+		C70F6F4818A2930B00A004E7 /* CWEmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWEmail.h; sourceTree = "<group>"; };
+		C70F6F4918A2930B00A004E7 /* CWEmail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWEmail.m; sourceTree = "<group>"; };
+		C70F6F4E18A2930B00A004E7 /* CWPersonProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWPersonProperty.h; sourceTree = "<group>"; };
+		C70F6F4F18A2930B00A004E7 /* CWPersonProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWPersonProperty.m; sourceTree = "<group>"; };
+		C70F6F5118A2942200A004E7 /* CWPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWPerson.h; sourceTree = "<group>"; };
+		C70F6F5218A2942200A004E7 /* CWPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWPerson.m; sourceTree = "<group>"; };
+		C7C30E7318A3B1310041CF30 /* CWAddressBookIncrementalStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWAddressBookIncrementalStore.h; sourceTree = "<group>"; };
+		C7C30E7418A3B1310041CF30 /* CWAddressBookIncrementalStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWAddressBookIncrementalStore.m; sourceTree = "<group>"; };
+		C7C30E7618A3B1450041CF30 /* PRSCoreDataHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PRSCoreDataHelper.h; sourceTree = "<group>"; };
+		C7C30E7718A3B1450041CF30 /* PRSCoreDataHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PRSCoreDataHelper.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,9 +157,11 @@
 				C70F6EFF18A239A600A004E7 /* CWMasterViewController.m */,
 				C70F6F0118A239A600A004E7 /* CWDetailViewController.h */,
 				C70F6F0218A239A600A004E7 /* CWDetailViewController.m */,
+				C7C30E7218A3B1160041CF30 /* IncrementalStore */,
 				C70F6F0418A239A600A004E7 /* Images.xcassets */,
-				C70F6EFB18A239A600A004E7 /* ContactPlus.xcdatamodeld */,
+				C70F6F3A18A2872000A004E7 /* Model */,
 				C70F6EED18A239A600A004E7 /* Supporting Files */,
+				C70F6F3E18A28C5D00A004E7 /* Cells */,
 			);
 			path = ContactPlus;
 			sourceTree = "<group>";
@@ -164,6 +193,46 @@
 				C70F6F1518A239A700A004E7 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C70F6F3A18A2872000A004E7 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C70F6F5118A2942200A004E7 /* CWPerson.h */,
+				C70F6F5218A2942200A004E7 /* CWPerson.m */,
+				C70F6EFB18A239A600A004E7 /* ContactPlus.xcdatamodeld */,
+				C70F6F4E18A2930B00A004E7 /* CWPersonProperty.h */,
+				C70F6F4F18A2930B00A004E7 /* CWPersonProperty.m */,
+				C70F6F4818A2930B00A004E7 /* CWEmail.h */,
+				C70F6F4918A2930B00A004E7 /* CWEmail.m */,
+				C70F6F4518A2930A00A004E7 /* CWPhoneNumber.h */,
+				C70F6F4618A2930A00A004E7 /* CWPhoneNumber.m */,
+				C70F6F4218A28E8D00A004E7 /* CWPerson+TableViewHelpers.h */,
+				C70F6F4318A28E8D00A004E7 /* CWPerson+TableViewHelpers.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		C70F6F3E18A28C5D00A004E7 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				C70F6F3318A2866C00A004E7 /* CWEditPropertyCell.h */,
+				C70F6F3418A2866C00A004E7 /* CWEditPropertyCell.m */,
+				C70F6F3F18A28C7C00A004E7 /* CWPredefinedTitleCell.h */,
+				C70F6F4018A28C7C00A004E7 /* CWPredefinedTitleCell.m */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
+		C7C30E7218A3B1160041CF30 /* IncrementalStore */ = {
+			isa = PBXGroup;
+			children = (
+				C7C30E7618A3B1450041CF30 /* PRSCoreDataHelper.h */,
+				C7C30E7718A3B1450041CF30 /* PRSCoreDataHelper.m */,
+				C7C30E7318A3B1310041CF30 /* CWAddressBookIncrementalStore.h */,
+				C7C30E7418A3B1310041CF30 /* CWAddressBookIncrementalStore.m */,
+			);
+			name = IncrementalStore;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -264,10 +333,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C70F6F4418A28E8D00A004E7 /* CWPerson+TableViewHelpers.m in Sources */,
+				C70F6F3518A2866C00A004E7 /* CWEditPropertyCell.m in Sources */,
+				C70F6F5318A2942200A004E7 /* CWPerson.m in Sources */,
+				C70F6F5018A2930B00A004E7 /* CWPersonProperty.m in Sources */,
+				C70F6F4A18A2930B00A004E7 /* CWEmail.m in Sources */,
 				C70F6F0018A239A600A004E7 /* CWMasterViewController.m in Sources */,
+				C70F6F4118A28C7C00A004E7 /* CWPredefinedTitleCell.m in Sources */,
 				C70F6EF718A239A600A004E7 /* CWAppDelegate.m in Sources */,
 				C70F6F0318A239A600A004E7 /* CWDetailViewController.m in Sources */,
+				C70F6F4718A2930A00A004E7 /* CWPhoneNumber.m in Sources */,
+				C7C30E7518A3B1310041CF30 /* CWAddressBookIncrementalStore.m in Sources */,
 				C70F6EFD18A239A600A004E7 /* ContactPlus.xcdatamodeld in Sources */,
+				C7C30E7818A3B1450041CF30 /* PRSCoreDataHelper.m in Sources */,
 				C70F6EF318A239A600A004E7 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -477,6 +555,7 @@
 				C70F6F1E18A239A700A004E7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C70F6F1F18A239A700A004E7 /* Build configuration list for PBXNativeTarget "ContactPlusTests" */ = {
 			isa = XCConfigurationList;
@@ -485,6 +564,7 @@
 				C70F6F2118A239A700A004E7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

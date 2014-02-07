@@ -1,74 +1,67 @@
 //
-//  CWAppDelegate.m
-//  ContactPlus
+//  PRSCoreDataHelper.m
+//  IncrementalStore
 //
-//  Created by Ester Ytterbrink on 05/02/2014.
-//  Copyright (c) 2014 Jayway. All rights reserved.
+//  Created by Ester Ytterbrink on 04/11/2013.
+//  Copyright (c) 2013 Prisjakt. All rights reserved.
 //
 
-#import "CWAppDelegate.h"
-
-#import "CWMasterViewController.h"
-#import "CWAddressBookIncrementalStore.h"
-@implementation CWAppDelegate
-
+#import "PRSCoreDataHelper.h"
+@interface PRSCoreDataHelper ()
+@property(nonatomic, strong) NSManagedObjectContext* backgroundContext;
+@end
+@implementation PRSCoreDataHelper
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (id)init
 {
-    // Override point for customization after application launch.
-    [NSPersistentStoreCoordinator registerStoreClass:[CWAddressBookIncrementalStore class] forStoreType:@"CWAddressBookIncrementalStore"];
-
-    UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-    CWMasterViewController *controller = (CWMasterViewController *)navigationController.topViewController;
-    controller.managedObjectContext = self.managedObjectContext;
-    return YES;
-}
-							
-- (void)applicationWillResignActive:(UIApplication *)application
-{
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-    // Saves changes in the application's managed object context before the application terminates.
-    [self saveContext];
+    self = [super init];
+    if (self) {
+        self.backgroundContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        self.backgroundContext.persistentStoreCoordinator = self.persistentStoreCoordinator;
+       
+     /*  [self.backgroundContext performBlockAndWait:^{
+           NSURL* url = [[NSBundle mainBundle] URLForResource:@"products" withExtension:@"json"];
+           NSData* jsonData = [NSData dataWithContentsOfURL:url];
+           NSError* error;
+           NSDictionary* dictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+           NSArray* items = dictionary[@"items"];
+           for (NSDictionary* product in items){
+               NSFetchRequest* fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"PRSProduct"];
+               fetchRequest.predicate = [NSPredicate predicateWithFormat: @"name like %@", product[@"name"]];
+             //  if ([self.backgroundContext countForFetchRequest:fetchRequest error:nil]  == 0) {
+               PRSProduct* managedProduct = [NSEntityDescription insertNewObjectForEntityForName:@"PRSProduct" inManagedObjectContext:self.backgroundContext];
+               managedProduct.name = product[@"name"];
+               managedProduct.stockStatus = product[@"stock_status"];
+                   
+           //    }
+           }
+           if ([self.backgroundContext hasChanges]) {
+               NSError* error;
+               [self.backgroundContext save:&error];
+               if (error) {
+                   NSLog(@"Error: %@ ", error);
+               }
+           }
+        }];*/
+    }
+    return self;
 }
 
 - (void)saveContext
 {
     NSError *error = nil;
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    if (managedObjectContext != nil) {
-        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-             // Replace this implementation with code to handle the error appropriately.
-             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+    if (_managedObjectContext != nil) {
+        if ([_managedObjectContext hasChanges] && ![_managedObjectContext save:&error]) {
+            // Replace this implementation with code to handle the error appropriately.
+            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
-        } 
+        }
     }
 }
-
 #pragma mark - Core Data stack
 
 // Returns the managed object context for the application.
@@ -94,7 +87,7 @@
     if (_managedObjectModel != nil) {
         return _managedObjectModel;
     }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"ContactPlus" withExtension:@"momd"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"IncrementalStore" withExtension:@"momd"];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return _managedObjectModel;
 }
@@ -107,15 +100,15 @@
         return _persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"ContactPlus.sqlite"];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"IncrementalStore.sqlite"];
     
     NSError *error = nil;
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:@"CWAddressBookIncrementalStore"configuration:nil URL:storeURL options:nil error:&error]) {
+    if (![_persistentStoreCoordinator addPersistentStoreWithType:@"CWAddressBookIncrementalStore" configuration:nil URL:storeURL options:nil error:&error]) {
         /*
          Replace this implementation with code to handle the error appropriately.
          
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
          
          Typical reasons for an error here include:
          * The persistent store is not accessible;
@@ -137,7 +130,7 @@
          */
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
-    }    
+    }
     
     return _persistentStoreCoordinator;
 }
@@ -149,5 +142,6 @@
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
+
 
 @end
