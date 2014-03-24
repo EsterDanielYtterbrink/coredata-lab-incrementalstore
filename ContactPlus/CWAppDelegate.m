@@ -21,8 +21,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    [NSPersistentStoreCoordinator registerStoreClass:[CWAddressBookIncrementalStore class] forStoreType:@"CWAddressBookIncrementalStore"];
-    ABAddressBookRef addressBook = ABAddressBookCreate();
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(nil, nil);
     ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error)
                                              {
                                                  if (granted)
