@@ -7,6 +7,7 @@
 //
 
 #import "PRSCoreDataHelper.h"
+#import "CWAddressBookIncrementalStore.h"
 @interface PRSCoreDataHelper ()
 @property(nonatomic, strong) NSManagedObjectContext* backgroundContext;
 @end
@@ -104,7 +105,7 @@
     
     NSError *error = nil;
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:@"CWAddressBookIncrementalStore" configuration:nil URL:storeURL options:nil error:&error]) {
+    if (![_persistentStoreCoordinator addPersistentStoreWithType:[CWAddressBookIncrementalStore type] configuration:nil URL:storeURL options:nil error:&error]) {
         /*
          Replace this implementation with code to handle the error appropriately.
          

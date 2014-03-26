@@ -9,5 +9,6 @@
 #import <CoreData/CoreData.h>
 
 @interface CWAddressBookIncrementalStore : NSIncrementalStore
++ (NSString *)type;
 
 @end

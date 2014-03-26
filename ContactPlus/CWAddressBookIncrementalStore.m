@@ -19,8 +19,9 @@
 + (void)initialize {
     [NSPersistentStoreCoordinator registerStoreClass:self forStoreType:[self type]];
 }
-+ (NSString *)type {
-    return [NSStringFromClass(self) stringByAppendingString:@"Type"];
++ (NSString *)type;
+{
+    return NSStringFromClass(self);
 }
 
 -(id)initWithPersistentStoreCoordinator:(NSPersistentStoreCoordinator *)root configurationName:(NSString *)name URL:(NSURL *)url options:(NSDictionary *)options;
@@ -34,7 +35,7 @@
 
 -(BOOL)loadMetadata:(NSError *__autoreleasing *)error;
 {
-    NSDictionary * metadata = @{ NSStoreUUIDKey: [[NSProcessInfo processInfo] globallyUniqueString], NSStoreTypeKey: [[self class]type]};
+    NSDictionary * metadata = @{ NSStoreUUIDKey: [[NSProcessInfo processInfo] globallyUniqueString], NSStoreTypeKey: [CWAddressBookIncrementalStore type]};
     self.metadata = metadata;
     return YES;
 }
@@ -49,7 +50,7 @@
     }else if ([request requestType] == NSSaveRequestType){
         return [self executeSaveRequest:(NSSaveChangesRequest*)request withContext:context error:error];
     }
-        CFRelease(addressBook);
+    CFRelease(addressBook);
     return  nil;
 }
 
@@ -59,7 +60,7 @@
 // Should return nil and set the error if the object cannot be found.
 
 - (NSIncrementalStoreNode *)newValuesForObjectWithID:(NSManagedObjectID*)objectID withContext:(NSManagedObjectContext*)context error:
-    (NSError**)error;
+(NSError**)error;
 {
     NSIncrementalStoreNode* node;
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
@@ -67,8 +68,8 @@
         NSNumber* idAsNumber = [self referenceObjectForObjectID:objectID];
         ABRecordID recordID = idAsNumber.integerValue;
         ABRecordRef person = ABAddressBookGetPersonWithRecordID(addressBook, recordID);
-       NSString* firstName = (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty));
-       NSString* lastName  = (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty));
+        NSString* firstName = (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty));
+        NSString* lastName  = (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty));
         NSMutableDictionary* values = [NSMutableDictionary dictionary];
         if (firstName) {
             [values setObject:firstName forKey:@"firstName"];
@@ -78,19 +79,20 @@
         }
         if (!(firstName || lastName)) {
             NSLog(@"names are both nil");
-
+            
         }
-
+        
         //NSLog(@"newValuesForObjectWithEntityName %@, firstName %@, lastName %@", objectID.entity.name, firstName, lastName);
-
-       //TODO! Add emails etc. [values setObject:[self newObjectIDForEntity:[NSEntityDescription entityForName:@"PRSCategory" inManagedObjectContext:context] referenceObject:@"Aircrafts"] forKey:@"category"];
+        
+        //TODO! Add emails etc.
+        //[values setObject:[self newObjectIDForEntity:[NSEntityDescription entityForName:@"PRSCategory" inManagedObjectContext:context] referenceObject:@"Aircrafts"] forKey:@"category"];
         //Should be incremented when record is saved!!
         uint64_t version = 1;
-     node = [[NSIncrementalStoreNode alloc] initWithObjectID:objectID withValues:values version:version];
+        node = [[NSIncrementalStoreNode alloc] initWithObjectID:objectID withValues:values version:version];
         return node;
     }/*else if ([objectID.entity.name isEqualToString:@"PRSCategory"]){
-       node  =[[ NSIncrementalStoreNode alloc]initWithObjectID:objectID withValues:@{@"name":@"Aircrafts",@"identifier":@"543",@"lowestPrice":@42}     version:1];
-    }
+      node  =[[ NSIncrementalStoreNode alloc]initWithObjectID:objectID withValues:@{@"name":@"Aircrafts",@"identifier":@"543",@"lowestPrice":@42}     version:1];
+      }
       */
     return node;
 }
@@ -104,7 +106,7 @@
         if ([managedObject respondsToSelector:@selector(name)]) {
             managedObjectID = [self newObjectIDForEntity:managedObject.entity referenceObject:[managedObject valueForKey:@"name"] ];
         }else{
-        
+            
         }
         if (managedObjectID) {
             [objectIDs addObject:managedObjectID];
@@ -119,8 +121,10 @@
 // Should return nil and set the error if the source object cannot be found.
 - (id)newValueForRelationship:(NSRelationshipDescription*)relationship forObjectWithID:(NSManagedObjectID*)objectID withContext:(NSManagedObjectContext *)context error:(NSError **)error;
 {
- 
-    return nil;
+    NSManagedObjectID* id1 = [self newObjectIDForEntity:relationship.entity referenceObject:@"email.home"];
+    NSManagedObjectID* id2 = [self newObjectIDForEntity:relationship.entity referenceObject:@"email.work"];
+
+    return @[id1, id2];
 }
 #pragma mark - Helper methods
 
@@ -136,33 +140,15 @@
             return [self objectsIDsForFetchRequest:fetchRequest withContext:context error:error];
             break;
         case NSDictionaryResultType:
-            [self dictionariesForFetchRequest:fetchRequest withContext:context error:error];
+            return [self dictionariesForFetchRequest:fetchRequest withContext:context error:error];
             break;
         case NSCountResultType:
-            [self countForFetchRequest:fetchRequest withContext:context error:error];
+           return  [self countForFetchRequest:fetchRequest withContext:context error:error];
             break;
         default:
             break;
     }
     
-    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-    NSEntityDescription* entity = [fetchRequest entity];
-    NSMutableArray* fetchedObjects = [NSMutableArray array];
-    if ([entity.managedObjectClassName isEqualToString:@"CWPerson"]) {
-        NSArray* allPeople = (__bridge NSArray *)(ABAddressBookCopyArrayOfAllPeople (addressBook));
-        for (int i = 0; i< [allPeople count]; i++){
-            ABRecordRef person = (__bridge ABRecordRef)([allPeople objectAtIndex:i]);
-            ABRecordID recordId = ABRecordGetRecordID(person);
-            NSString* lastName  = (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty));
-            NSLog(@"lastName %@", lastName);
-            NSManagedObjectID* objectID = [self newObjectIDForEntity:entity referenceObject:@(recordId)];
-            CWPerson* p = (CWPerson*)[context objectWithID:objectID];
-            //               p.lastName = lastName;
-            [fetchedObjects addObject:p];
-        }
-        [fetchedObjects sortUsingDescriptors:fetchRequest.sortDescriptors];
-        return fetchedObjects;
-    }
     /* if([entity.managedObjectClassName isEqualToString:@"CWPersonProperty"])
      {
      fetchedObjects = [NSMutableArray arrayWithObject:[context objectWithID:[self newObjectIDForEntity:entity referenceObject:@"Aircrafts"]]];
@@ -175,7 +161,7 @@
      fetchedObjects = [NSMutableArray arrayWithObject:[context objectWithID:[self newObjectIDForEntity:entity referenceObject:@"Aircrafts"]]];
      
      }*/
-     return fetchedObjects;
+    return @[];
 }
 
 -(NSArray*)executeSaveRequest:(NSSaveChangesRequest *)request withContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error;
@@ -189,15 +175,33 @@
 }
 -(NSArray*)objectsForFetchRequest:(NSFetchRequest *)request withContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error;
 {
-    return @[];
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
+    NSEntityDescription* entity = [request entity];
+    NSMutableArray* fetchedObjects = [NSMutableArray array];
+    if ([entity.managedObjectClassName isEqualToString:@"CWPerson"]) {
+        NSArray* allPeople = (__bridge NSArray *)(ABAddressBookCopyArrayOfAllPeople (addressBook));
+        for (int i = 0; i< [allPeople count]; i++){
+            ABRecordRef person = (__bridge ABRecordRef)([allPeople objectAtIndex:i]);
+            ABRecordID recordId = ABRecordGetRecordID(person);
+            NSString* lastName  = (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty));
+            NSLog(@"lastName %@", lastName);
+            NSManagedObjectID* objectID = [self newObjectIDForEntity:entity referenceObject:@(recordId)];
+            CWPerson* p = (CWPerson*)[context objectWithID:objectID];
+            //               p.lastName = lastName;
+            [fetchedObjects addObject:p];
+        }
+    }
+    [fetchedObjects sortUsingDescriptors:request.sortDescriptors];
+    return fetchedObjects;
 }
+    
 -(NSArray*)objectsIDsForFetchRequest:(NSFetchRequest *)request withContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error;
 {
     return @[];
 }
+
 -(NSArray*)dictionariesForFetchRequest:(NSFetchRequest *)request withContext:(NSManagedObjectContext *)context error:(NSError *__autoreleasing *)error;
 {
     return @[];
 }
-
 @end
